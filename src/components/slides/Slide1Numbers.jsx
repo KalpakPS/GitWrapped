@@ -35,7 +35,10 @@ export default function Slide1Numbers({ data }) {
         transition={{ duration: 0.5 }}
         className="space-y-8 md:space-y-12"
       >
-        <h2 className="text-xl md:text-3xl font-medium text-white/60">Your year in numbers</h2>
+        <div className="flex flex-col gap-1 mb-4">
+          <span className="text-primary uppercase tracking-[0.3em] font-bold text-xs">Rolling Statistics</span>
+          <h2 className="text-xl md:text-3xl font-medium text-white/60">Your last 365 days in numbers</h2>
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-16">
           <motion.div 
