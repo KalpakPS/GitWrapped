@@ -29,6 +29,14 @@ export default function Slide7Identity({ data }) {
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
   };
 
+  const [copied, setCopied] = React.useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(`${window.location.origin}/results/${data.username}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="slide-container !flex-col md:!flex-row items-center justify-center gap-4 md:gap-16 px-4 md:px-12 py-8 overflow-hidden">
       {/* Left Side: Card */}
@@ -94,10 +102,12 @@ export default function Slide7Identity({ data }) {
               className="flex-1 bg-white/5 border border-white/10 rounded-lg md:rounded-xl px-3 py-1 md:px-4 md:py-2 text-[10px] md:text-sm text-white/60 outline-none"
             />
             <button 
-              onClick={() => navigator.clipboard.writeText(`${window.location.origin}/results/${data.username}`)}
-              className="px-3 py-1 md:px-4 md:py-2 bg-white/10 rounded-lg md:rounded-xl text-white text-xs md:text-sm hover:bg-white/20 transition-colors cursor-pointer"
+              onClick={handleCopy}
+              className={`px-3 py-1 md:px-4 md:py-2 rounded-lg md:rounded-xl text-xs md:text-sm transition-all cursor-pointer ${
+                copied ? 'bg-green-500 text-white' : 'bg-white/10 text-white hover:bg-white/20'
+              }`}
             >
-              Copy
+              {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
         </motion.div>
