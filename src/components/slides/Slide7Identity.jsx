@@ -11,7 +11,10 @@ export default function Slide7Identity({ data }) {
   const downloadCard = async () => {
     if (cardRef.current === null) return;
     try {
-      const dataUrl = await toPng(cardRef.current, { cacheBust: true });
+      const dataUrl = await toPng(cardRef.current, { 
+        cacheBust: true,
+        pixelRatio: 2,
+      });
       const link = document.createElement('a');
       link.download = `gitwrapped-${data.username}.png`;
       link.href = dataUrl;

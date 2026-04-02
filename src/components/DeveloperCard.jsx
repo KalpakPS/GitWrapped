@@ -50,8 +50,8 @@ const DeveloperCard = forwardRef(({ data }, ref) => {
           </div>
         </div>
         
-        <h3 className="mt-8 text-3xl font-black italic tracking-tighter uppercase">{userClass}</h3>
-        <p className="text-white/40 text-sm font-mono mt-1">Master of {element}</p>
+        <h3 className="mt-8 text-3xl font-black italic tracking-tighter uppercase whitespace-nowrap leading-none">{userClass}</h3>
+        <p className="text-white/40 text-sm font-mono mt-2">Master of {element}</p>
       </div>
 
       {/* Stats Footer */}
