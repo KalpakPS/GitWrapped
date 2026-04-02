@@ -26,7 +26,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen flex flex-col items-center px-4 pt-16 md:pt-32 pb-12 overflow-x-hidden text-white">
+    <main className="relative min-h-screen flex flex-col items-center px-4 pt-16 md:pt-12 pb-12 overflow-x-hidden text-white">
       <div className="wrapped-bg" />
       
       {/* Hero Section */}
@@ -46,12 +46,13 @@ export default function Home() {
           <span className="text-xs md:text-sm font-medium">GitWrapped React is here</span>
         </motion.div>
 
-        <h1 className="text-3xl sm:text-6xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/50 mb-6 tracking-tight leading-tight md:leading-none">
-          Your Year in <span className="text-primary italic">Code</span>.
+        <h1 className="text-3xl sm:text-6xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/50 mb-4 tracking-tight leading-tight md:leading-none">
+          Your <span className="text-primary italic">365 Days</span> in Code.
         </h1>
+        <p className="text-primary uppercase tracking-[0.4em] font-black text-[10px] md:text-xs mb-8 opacity-80">Rolling Yearly Statistics</p>
         
         <p className="text-base md:text-xl text-white/60 mb-8 md:mb-12 max-w-2xl mx-auto px-2 text-center">
-           Analyze your commits, celebrate your growth, and unwrap your true developer potential.
+           Analyze your last 365 days of activity, celebrate your growth, and unwrap your true developer potential.
         </p>
 
         <form onSubmit={handleSubmit} className="relative max-w-md mx-auto group">
@@ -166,8 +167,22 @@ export default function Home() {
         )}
       </AnimatePresence>
 
+      {/* Hidden SEO Content for Crawlers */}
+      <section className="sr-only">
+        <h2>What is GitWrapped?</h2>
+        <p>
+          GitWrapped (also known as GitHub Wrapped) is a rolling yearly review of your coding activity. 
+          Similar to Spotify Wrapped, it analyzes your GitHub contributions, commits, pull requests, 
+          and repository stars over the last 365 days to generate a unique developer identity and power level.
+        </p>
+        <p>
+          Discover your developer class, unlock achievements, and see your language distribution. 
+          Compare your stats with friends in a Code Battle.
+        </p>
+      </section>
+
       <footer className="mt-auto py-8 text-white/10 text-[10px] z-10 font-medium tracking-widest uppercase">
-        Inspired by Spotify Wrapped
+        Inspired by Spotify Wrapped • GitWrapped
       </footer>
     </main>
   );
