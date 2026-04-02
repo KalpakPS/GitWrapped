@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+  --theme-primary: #6366f1;
+  --theme-bg: #000000;
+  --theme-secondary: #4f46e5;
+}
+
+[data-theme='JavaScript'] {
+  --theme-primary: #F7DF1E;
+  --theme-bg: #1a1a00;
+}
+
+[data-theme='TypeScript'] {
+  --theme-primary: #3178C6;
+  --theme-bg: #001a33;
+}
+
+[data-theme='Python'] {
+  --theme-primary: #3776AB;
+  --theme-bg: #002233;
+}
+
+[data-theme='Rust'] {
+  --theme-primary: #CE422B;
+  --theme-bg: #1a0a00;
+}
+
+[data-theme='Go'] {
+  --theme-primary: #00ADD8;
+  --theme-bg: #001a1a;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--theme-primary);
+  --color-theme-bg: var(--theme-bg);
+  
+  --animate-gradient: gradient 15s ease infinite;
+  --animate-shimmer: shimmer 2s linear infinite;
+  
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100dvh;
+  margin: 0;
+}
+
+.slide-container {
+  @apply flex flex-col items-center justify-center h-full w-full max-w-4xl mx-auto p-2 sm:p-4 md:p-8;
+  max-height: 100dvh;
+}
+
+.wrapped-bg {
+  background: linear-gradient(-45deg, #000000, #1a1a1a, var(--theme-bg), #000000);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-holographic {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-holographic::after {
+  content: "";
+  position: absolute;
+  top: -150%;
+  left: -150%;
+  width: 300%;
+  height: 300%;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.1) 55%,
+    transparent 100%
+  );
+  transform: rotate(-45deg);
+  animation: shimmer 3s infinite;
+  pointer-events: none;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--theme-primary) rgba(255, 255, 255, 0.05) !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px !important;
+  width: 6px !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 10px !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--theme-primary) !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary) !important;
+  filter: brightness(1.2);
+}
+
+::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 10px !important;
+  border: 2px solid transparent !important;
+  background-clip: content-box !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  background-clip: content-box !important;
+}
