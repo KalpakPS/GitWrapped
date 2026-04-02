@@ -239,13 +239,13 @@ function gamify(stats) {
   const element = elements[primaryLang] || '✨ Ether';
 
   let userClass = 'The Developer';
-  if (stats.mostActiveHour >= 22 || stats.mostActiveHour <= 4) userClass = 'Night Owl';
-  else if (stats.mostActiveHour >= 5 && stats.mostActiveHour <= 9) userClass = 'Early Bird';
-  else if (stats.totalPRs > stats.totalCommits * 0.3) userClass = 'The Socialite';
-  else if (stats.longestStreak >= 180) userClass = 'The Machine';
-  else if (stats.longestStreak >= 60) userClass = 'The Grinder';
+  if (stats.longestStreak >= 180) userClass = 'The Machine';
   else if (stats.topRepos.some(r => r.stars > 500)) userClass = 'The Architect';
+  else if (stats.totalPRs > stats.totalCommits * 0.3) userClass = 'The Socialite';
+  else if (stats.longestStreak >= 60) userClass = 'The Grinder';
   else if (stats.maxDailyCommits > 20) userClass = 'The Sprinter';
+  else if (stats.mostActiveHour >= 22 || stats.mostActiveHour <= 4) userClass = 'Night Owl';
+  else if (stats.mostActiveHour >= 5 && stats.mostActiveHour <= 9) userClass = 'Early Bird';
   
   const languagesCount = Object.keys(stats.languageDistribution).length;
   if (languagesCount >= 5) userClass = 'The Polyglot';
