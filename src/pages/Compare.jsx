@@ -35,8 +35,8 @@ export default function Compare() {
     const fetchAll = async () => {
       try {
         const [d1, d2] = await Promise.all([
-          getWrappedData(user1),
-          getWrappedData(user2)
+          getWrappedData(user1, 'battle'),
+          getWrappedData(user2, 'battle')
         ]);
         setData1(d1);
         setData2(d2);
