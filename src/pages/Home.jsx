@@ -70,7 +70,7 @@ export default function Home() {
           className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-white/10 border border-white/20 mb-6 md:mb-8 backdrop-blur-md"
         >
           <Github className="w-3.5 h-3.5 md:w-4 h-4" />
-          <span className="text-xs md:text-sm font-medium">GitWrapped React is here</span>
+          <span className="text-xs md:text-sm font-medium">GitWrapped</span>
         </motion.div>
 
         <h1 className="text-3xl sm:text-6xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/50 mb-4 tracking-tight leading-tight md:leading-none">
@@ -205,17 +205,38 @@ export default function Home() {
         )}
       </AnimatePresence>
 
+      {/* Featured SEO Content */}
+      <section className="mt-24 mb-16 max-w-5xl w-full px-6 z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+            <h2 className="text-primary font-bold mb-3 uppercase tracking-wider text-xs">Unlock Identity</h2>
+            <h3 className="text-xl font-bold mb-3">What is GitWrapped?</h3>
+            <p className="text-sm text-white/50 leading-relaxed">
+              GitWrapped (also known as <span className="text-white">GitHub Wrapped</span>) is a rolling 365-day review of your coding journey. We analyze your contributions, stars, and languages to find your developer identity.
+            </p>
+          </div>
+          <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+            <h2 className="text-primary font-bold mb-3 uppercase tracking-wider text-xs">Interactive Stats</h2>
+            <h3 className="text-xl font-bold mb-3">Visualize Growth</h3>
+            <p className="text-sm text-white/50 leading-relaxed">
+              Discover your developer class, unlock achievements, and see your language distribution over the last 365 days. Your growth is analyzed to generate a personalized power level.
+            </p>
+          </div>
+          <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+            <h2 className="text-primary font-bold mb-3 uppercase tracking-wider text-xs">Play & Compare</h2>
+            <h3 className="text-xl font-bold mb-3">Code Battles</h3>
+            <p className="text-sm text-white/50 leading-relaxed">
+              Compare your yearly stats with friends in a head-to-head Code Battle. See who had the most commits, stars, and PRs in the last 365 days on <span className="text-white">GitHub</span>.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Hidden SEO Content for Crawlers */}
       <section className="sr-only">
-        <h2>What is GitWrapped?</h2>
+        <h2>GitHub Wrapped 2026 & 2025</h2>
         <p>
-          GitWrapped (also known as GitHub Wrapped) is a rolling yearly review of your coding activity. 
-          Similar to Spotify Wrapped, it analyzes your GitHub contributions, commits, pull requests, 
-          and repository stars over the last 365 days to generate a unique developer identity and power level.
-        </p>
-        <p>
-          Discover your developer class, unlock achievements, and see your language distribution. 
-          Compare your stats with friends in a Code Battle.
+          GitWrapped is the ultimate GitHub stats visualizer. Whether it's GitHub Wrapped 2026 or 2025, you can get a live look at your coding trends.
         </p>
       </section>
 
