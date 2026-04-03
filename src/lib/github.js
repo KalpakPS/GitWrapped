@@ -10,7 +10,8 @@ const GITHUB_GRAPHQL_API = 'https://api.github.com/graphql';
 export async function getWrappedData(username, type = 'recap') {
   if (!username) throw new Error('Username is required');
 
-  const response = await fetch(`/api/stats?username=${username}&type=${type}`);
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const response = await fetch(`/api/stats?username=${username}&type=${type}&tz=${tz}`);
   
   if (!response.ok) {
     const errorData = await response.json();
@@ -20,4 +21,25 @@ export async function getWrappedData(username, type = 'recap') {
   return await response.json();
 }
 
-// Note: Internal API logic moved to functions/api/stats.js for security
+/**
+ * Generate AI Roast or Hype
+ * @param {string} username
+ * @param {object} stats
+ * @param {'roast' | 'hype'} mode
+ * @returns {Promise<string>} aiMessage
+ */
+export async function getAIGeneration(username, stats, mode) {
+  const response = await fetch('/api/ai', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, stats, mode })
+  });
+
+  if (!response.ok) {
+     const errorData = await response.json();
+     throw new Error(errorData.error || 'Failed to generate AI response');
+  }
+
+  const { message } = await response.json();
+  return message;
+}

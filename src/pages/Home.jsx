@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, X, Zap, Star, LogOut, ChevronRight } from 'lucide-react';
 import { Github } from '../components/Icons';
+import packageJson from '../../package.json';
+import PatchNotesModal from '../components/PatchNotesModal';
 
 export default function Home() {
   const [username, setUsername] = useState('');
@@ -12,6 +14,7 @@ export default function Home() {
   const [battleUser1, setBattleUser1] = useState('');
   const [battleUser2, setBattleUser2] = useState('');
   const [totalRecaps, setTotalRecaps] = useState(0);
+  const [isPatchNotesOpen, setIsPatchNotesOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -116,7 +119,25 @@ export default function Home() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Floating Version Tag */}
+      <motion.button
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 1.5 }}
+        onClick={() => setIsPatchNotesOpen(true)}
+        className="fixed top-6 right-6 z-50 text-white/20 text-[10px] font-mono tracking-widest uppercase hover:text-primary transition-all duration-300 group/version flex items-center gap-1.5 cursor-pointer select-none bg-white/5 px-2.5 py-1.5 rounded-lg border border-transparent hover:border-primary/20 hover:bg-primary/5 active:scale-95"
+      >
+        <div className="w-1 h-1 rounded-full bg-primary/40 group-hover:bg-primary animate-pulse" />
+        v{packageJson.version}
+      </motion.button>
       
+      {/* Patch Notes Modal */}
+      <PatchNotesModal 
+        isOpen={isPatchNotesOpen} 
+        onClose={() => setIsPatchNotesOpen(false)} 
+      />
+
       {/* Hero Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}

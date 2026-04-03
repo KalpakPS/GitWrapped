@@ -9,7 +9,8 @@ export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
   const username = url.searchParams.get('username');
-  const type = url.searchParams.get('type') || 'recap'; // Default to recap
+  const type = url.searchParams.get('type') || 'recap';
+  const tz = url.searchParams.get('tz') || 'UTC';
   
   // Extract token from cookie or fallback to environment variable
   let token = env.GITHUB_TOKEN;
@@ -42,7 +43,7 @@ export async function onRequest(context) {
   }
 
   try {
-    const stats = await fetchGitHubData(username, token);
+    const stats = await fetchGitHubData(username, token, tz);
     const gamified = gamify(stats);
 
     // Increment cumulative counter in the background (Only if NOT a battle)
@@ -72,13 +73,29 @@ export async function onRequest(context) {
   }
 }
 
-async function fetchGitHubData(username, token) {
+async function fetchGitHubData(username, token, tz = 'UTC') {
   const now = new Date();
   const from = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000).toISOString();
   const to = now.toISOString();
 
+  // Step 1: Get User ID for history filtering
+  const idQuery = `query($username: String!) { user(login: $username) { id } }`;
+  const idRes = await fetch(GITHUB_GRAPHQL_API, {
+    method: 'POST',
+    headers: { 
+      'Authorization': `Bearer ${token}`, 
+      'Content-Type': 'application/json',
+      'User-Agent': 'GitWrapped-Pages-Function'
+    },
+    body: JSON.stringify({ query: idQuery, variables: { username } }),
+  });
+  const idData = await idRes.json();
+  if (idData.errors) throw new Error(idData.errors[0].message);
+  const userId = idData.data.user?.id;
+  if (!userId) throw new Error('User not found');
+
   const query = `
-    query($username: String!, $from: DateTime!, $to: DateTime!) {
+    query($username: String!, $from: DateTime!, $to: DateTime!, $fromGit: GitTimestamp!, $toGit: GitTimestamp!, $userId: ID!) {
       user(login: $username) {
         name
         login
@@ -93,6 +110,7 @@ async function fetchGitHubData(username, token) {
               name
               stargazerCount
               forkCount
+              url
               primaryLanguage { name color }
             }
           }
@@ -102,6 +120,7 @@ async function fetchGitHubData(username, token) {
             name
             stargazerCount
             forkCount
+            url
             primaryLanguage { name color }
           }
         }
@@ -117,9 +136,20 @@ async function fetchGitHubData(username, token) {
             }
           }
           commitContributionsByRepository(maxRepositories: 5) {
-            repository { name stargazerCount }
-            contributions(first: 100) {
-              nodes { occurredAt }
+            repository {
+              name
+              url
+              defaultBranchRef {
+                target {
+                  ... on Commit {
+                    history(first: 50, since: $fromGit, until: $toGit, author: { id: $userId }) {
+                      nodes {
+                        committedDate
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -134,7 +164,17 @@ async function fetchGitHubData(username, token) {
       'Content-Type': 'application/json',
       'User-Agent': 'GitWrapped-Pages-Function'
     },
-    body: JSON.stringify({ query, variables: { username, from, to } }),
+    body: JSON.stringify({ 
+      query, 
+      variables: { 
+        username, 
+        from, 
+        to, 
+        fromGit: from, 
+        toGit: to, 
+        userId 
+      } 
+    }),
   });
 
   const result = await response.json();
@@ -178,20 +218,34 @@ async function fetchGitHubData(username, token) {
     }
   });
 
-  // Calculate most active patterns from commits
-  const hourCounts = {};
-  contributions.commitContributionsByRepository.forEach(repo => {
-    repo.contributions.nodes.forEach(commit => {
-      const hour = new Date(commit.occurredAt).getHours();
-      hourCounts[hour] = (hourCounts[hour] || 0) + 1;
-    });
+  const commitTimestamps = [];
+  // Collect actual commit timestamps from history
+  user.contributionsCollection.commitContributionsByRepository.forEach(item => {
+    if (item.repository.defaultBranchRef?.target?.history?.nodes) {
+      item.repository.defaultBranchRef.target.history.nodes.forEach(commit => {
+        commitTimestamps.push(commit.committedDate);
+      });
+    }
   });
 
-  let mostActiveHour = 14, maxHourCount = -1;
-  Object.entries(hourCounts).forEach(([hour, count]) => {
+  // Calculate most active hour in local time
+  const hourCounts = new Array(24).fill(0);
+  commitTimestamps.forEach(ts => {
+    const date = new Date(ts);
+    const hour = parseInt(new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      hour12: false,
+      timeZone: tz
+    }).format(date));
+    hourCounts[hour]++;
+  });
+
+  let maxHourCount = -1;
+  let mostActiveHour = 12;
+  hourCounts.forEach((count, i) => {
     if (count > maxHourCount) {
       maxHourCount = count;
-      mostActiveHour = parseInt(hour);
+      mostActiveHour = i;
     }
   });
 
@@ -216,6 +270,7 @@ async function fetchGitHubData(username, token) {
       name: r.name,
       stars: r.stargazerCount,
       forks: r.forkCount,
+      url: r.url,
       language: r.primaryLanguage?.name || 'Unknown',
       languageColor: r.primaryLanguage?.color
     })),
@@ -223,13 +278,15 @@ async function fetchGitHubData(username, token) {
       name: r.name,
       stars: r.stargazerCount,
       forks: r.forkCount,
+      url: r.url,
       language: r.primaryLanguage?.name || 'Unknown',
       languageColor: r.primaryLanguage?.color
     })),
     contributionCalendar: allDays,
     languageDistribution: languages,
-    mostActiveHour,
     mostActiveDay,
+    mostActiveHour,
+    commitTimestamps,
     longestStreak: maxStreak,
     maxDailyCommits: maxDaily,
   };
@@ -278,6 +335,7 @@ function gamify(stats) {
   else if (stats.maxDailyCommits > 20) userClass = 'The Sprinter';
   else if (stats.mostActiveHour >= 22 || stats.mostActiveHour <= 4) userClass = 'Night Owl';
   else if (stats.mostActiveHour >= 5 && stats.mostActiveHour <= 9) userClass = 'Early Bird';
+  else if (stats.mostActiveHour >= 12 && stats.mostActiveHour <= 17) userClass = 'Midday Maverick';
   
   const languagesCount = Object.keys(stats.languageDistribution).length;
   if (languagesCount >= 5) userClass = 'The Polyglot';
@@ -295,8 +353,8 @@ function unlockAchievements(stats) {
   return [
     {
       id: 'first-blood',
-      icon: '🩸',
-      title: 'First Blood',
+      icon: '✨',
+      title: 'git init',
       description: 'First commit of the year',
       rarity: 'common',
       unlocked: stats.totalCommits > 0,
@@ -340,6 +398,22 @@ function unlockAchievements(stats) {
       description: 'PR merged into someone else\'s repo',
       rarity: 'rare',
       unlocked: stats.totalPRs > 5,
+    },
+    {
+      id: 'architects-legacy',
+      icon: '🏛️',
+      title: "Architect's Legacy",
+      description: 'Your projects have been forked 20+ times',
+      rarity: 'rare',
+      unlocked: stats.topRepos.reduce((acc, repo) => acc + (repo.forks || 0), 0) >= 20,
+    },
+    {
+      id: 'total-explorer',
+      icon: '🧭',
+      title: 'Total Explorer',
+      description: 'Contributed to 10+ different repositories',
+      rarity: 'rare',
+      unlocked: stats.totalReposContributedTo >= 10,
     },
     {
       id: 'the-1-percent',

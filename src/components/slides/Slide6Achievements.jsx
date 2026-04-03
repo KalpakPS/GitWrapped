@@ -65,7 +65,7 @@ export default function Slide6Achievements({ data }) {
         <p className="text-base md:text-xl text-white/60 mt-2 md:mt-4 text-center md:text-left">You unlocked <span className="text-primary font-bold">{unlockedCount}</span> of {achievements.length} milestones.</p>
       </motion.div>
 
-      <div className="grid grid-cols-3 lg:grid-cols-5 gap-2 md:gap-6 w-full max-w-5xl px-4 md:px-0">
+      <div className="grid grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4 w-full max-w-6xl px-4 md:px-0">
         {achievements.map((a, i) => (
           <AchievementBadge key={a.id} achievement={a} index={i} />
         ))}

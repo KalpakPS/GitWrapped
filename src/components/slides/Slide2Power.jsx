@@ -1,11 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Zap, Shield, Sparkles, Ghost, Swords, Bird, Moon, Coffee, Boxes } from 'lucide-react';
+import { Zap, Shield, Sparkles, Ghost, Swords, Bird, Moon, Coffee, Boxes, Sun } from 'lucide-react';
 
 const ClassIcon = ({ type }) => {
   switch (type) {
     case 'Night Owl': return <Moon className="w-8 h-8 text-indigo-400" />;
     case 'Early Bird': return <Bird className="w-8 h-8 text-yellow-400" />;
+    case 'Midday Maverick': return <Sun className="w-8 h-8 text-orange-400" />;
     case 'The Socialite': return <Swords className="w-8 h-8 text-pink-400" />;
     case 'The Machine': return <Boxes className="w-8 h-8 text-red-500" />;
     case 'The Grinder': return <Coffee className="w-8 h-8 text-orange-400" />;

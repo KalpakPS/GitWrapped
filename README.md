@@ -1,7 +1,5 @@
 <div align="center">
 
-# 🚀 GitWrapped
-
 ![GitWrapped Hero Banner](public/assets/hero.png)
 
 ### **Experience your GitHub stats like a cinematic masterpiece.**
@@ -23,15 +21,27 @@
 
 ## 🎬 The Cinematic Chapters
 
-Your story is told through seven streamlined scenes:
+Your story is told through eight streamlined scenes:
 
 1. 📊 **Stats Overview**: Your total Repos, PRs, and Issues at a glance.
 2. ⚡ **Power Archetype**: Your developer tier and class based on coding performance.
 3. 🧬 **Coding DNA**: A breakdown of your commit habits and temporal patterns.
-4. 🔥 **Contribution Heatmap**: A high-fidelity visualization of your yearly activity.
-5. 🌠 **Community Impact**: Your stars, forks, and ecosystem reach.
-6. 🏆 **Achievements**: Special milestones and badges unlocked during the year.
-7. 🆔 **Digital Identity**: A final summary card ready for social sharing.
+4. 🥁 **Activity Rhythm**: High-fidelity visualization of your hourly pulse and weekly energy.
+5. 🔥 **Contribution Heatmap**: A cinematic map of your yearly activity.
+6. 🌠 **Community Impact**: Your stars, forks, and ecosystem reach.
+7. 🏆 **Achievements**: Special milestones and badges unlocked during the year.
+8. 🆔 **Digital Identity**: A final summary card ready for social sharing.
+
+---
+
+## 🔥 Project Features
+
+| Feature | Description |
+| :--- | :--- |
+| **⚔️ Code Battle** | Compare stats with fellow developers in a real-time showdown. |
+| **📊 Interactive Analytics** | High-fidelity charts and heatmaps that turn raw activity into visual stories. |
+| **📸 One-Click Export** | Export your identity card as a high-quality image for social sharing. |
+| **🔐 Private Stats** | Optional GitHub OAuth to include your private repository data in your recap. |
 
 ---
 
@@ -52,27 +62,59 @@ Your **Power Level** isn't just a number—it's a weighted score based on your r
 
 ---
 
-## 🔥 Project Features
+## 🎭 Developer Classes
 
-| Feature | Description |
-| :--- | :--- |
-| **⚔️ Code Battle** | Compare stats with fellow developers in a real-time showdown. |
-| **📊 Interactive Analytics** | High-fidelity charts and heatmaps that turn raw activity into visual stories. |
-| **📸 One-Click Export** | Export your identity card as a high-quality image for social sharing. |
-| **🔐 Private Stats** | Optional GitHub OAuth to include your private repository data in your recap. |
+Your **Class** is determined by your daily habits and repository impact.
+
+| Class | Description | Requirement |
+| :--- | :--- | :--- |
+| **🦉 Night Owl** | You code while the world sleeps. | Activity peak 10PM - 4AM |
+| **🌅 Early Bird** | You conquer the codebase before breakfast. | Activity peak 5AM - 9AM |
+| **🤠 Midday Maverick** | Peak productivity during the bright hours. | Activity peak 12PM - 5PM |
+| **🤝 The Socialite** | You favor collaboration and code reviews. | High PR to Commit ratio |
+| **🤖 The Machine** | Unstoppable momentum. Half a year of non-stop code. | 180+ Day Streak |
+| **🔨 The Grinder** | Relentless dedication to the craft. | 60+ Day Streak |
+| **🏗️ The Architect** | You build things that the community values. | Repo with 500+ Stars |
+| **⚡ The Sprinter** | Capable of massive bursts of productivity. | 20+ Commits in one day |
+| **🌍 The Polyglot** | Master of many syntax, nomad of stacks. | 5+ Languages used |
+| **💻 The Developer** | The foundation of the digital world. | Default Class |
 
 ---
 
-## 🛠️ Deployment & Setup (Cloudflare)
+## 🏆 Achievements
 
-To enable Private Data authorization, you must configure a GitHub OAuth App and set the following environment variables:
+Special milestones that define your journey as a developer. Unlock them by reaching specific metrics during the year.
 
-1. **GitHub OAuth App**: Create one in [Developer Settings](https://github.com/settings/developers).
-   - **Authorization callback URL**: `https://your-domain.pages.dev/api/auth/callback`
-2. **Environment Variables**:
-   - `GITHUB_CLIENT_ID`: Your OAuth Client ID.
-   - `GITHUB_CLIENT_SECRET`: Your OAuth Client Secret.
-   - `GITHUB_TOKEN`: Your personal fallback token for public stats.
+| Achievement | Description | Icon | Rarity |
+| :--- | :--- | :--- | :--- |
+| **git init** | First commit of the year. | ✨ | Common |
+| **Night Shift** | 10+ commits after midnight. | 🌙 | Common |
+| **Weekend Warrior** | 20+ commits on weekends. | 🛡️ | Common |
+| **Streak Master** | Maintain a 30-day coding streak. | 🔥 | Rare |
+| **Century Club** | 10+ commits in a single day. | 💯 | Rare |
+| **Open Source Hero** | 5+ Pull Requests merged. | 🌟 | Rare |
+| **Architect's Legacy** | Your projects have been forked 20+ times. | 🏛️ | Rare |
+| **Total Explorer** | Contributed to 10+ different repositories. | 🧭 | Rare |
+| **The 1%** | Reach 1,000+ total commits this year. | 👑 | Legendary |
+| **Crab Whisperer** | Your primary coding language is Rust. | 🦀 | Legendary |
+| **42** | You hit exactly 42 commits. The answer. | 🌌 | Legendary |
+| **Comeback Kid** | Massive productivity spike after a quiet period. | 📈 | Legendary |
+
+---
+
+## 💎 The Tiers
+
+Your total score determines your standing in the developer hierarchy.
+
+| Tier | Score Range |
+| :--- | :--- |
+| **Mythic** | 10,000+ |
+| **Legend** | 5,000+ |
+| **Principal** | 2,500+ |
+| **Senior** | 1,000+ |
+| **Developer** | 500+ |
+| **Apprentice** | 100+ |
+| **Novice** | < 100 |
 
 ---
 

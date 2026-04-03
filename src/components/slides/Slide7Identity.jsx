@@ -1,8 +1,10 @@
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import DeveloperCard from '../DeveloperCard';
-import { Download, Share2 } from 'lucide-react';
+import { Download, Share2, Flame, Sparkles } from 'lucide-react';
 import { toPng } from 'html-to-image';
+import AIModal from '../AIModal';
+import { getAIGeneration } from '../../lib/github';
 
 export default function Slide7Identity({ data }) {
   const cardRef = useRef(null);
@@ -76,8 +78,40 @@ export default function Slide7Identity({ data }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const [aiModal, setAiModal] = React.useState({ isOpen: false, mode: 'roast' });
+
+  const openAiModal = (mode) => {
+    setAiModal({ isOpen: true, mode });
+    
+    // Track AI event
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', `ai_${mode}`, {
+        'username': data.username
+      });
+    }
+  };
+
+  const handleGenerateAI = async (mode) => {
+    const stats = {
+      commits: data.totalCommits,
+      pullRequests: data.totalPRs,
+      streak: data.longestStreak,
+      activeDays: data.contributionCalendar.filter(d => d.count > 0).length,
+      tier: data.gamified.tier,
+      archetype: data.gamified.class
+    };
+    return await getAIGeneration(data.username, stats, mode);
+  };
+
   return (
     <div className="slide-container !flex-col md:!flex-row items-center justify-center gap-4 md:gap-16 px-4 md:px-12 py-8 overflow-hidden">
+      <AIModal 
+        isOpen={aiModal.isOpen} 
+        mode={aiModal.mode} 
+        username={data.username}
+        onClose={() => setAiModal(prev => ({ ...prev, isOpen: false }))}
+        onGenerate={handleGenerateAI}
+      />
       {/* Left Side: Card */}
       <motion.div
         initial={{ opacity: 0, x: -50, rotate: -2 }}
@@ -121,6 +155,28 @@ export default function Slide7Identity({ data }) {
           >
             <Share2 className="w-4 h-4 md:w-5 md:h-5" />
             Share
+          </motion.button>
+        </div>
+
+        <div className="flex flex-row gap-3 md:gap-4 w-full">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => openAiModal('roast')}
+            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold py-3 md:py-4 px-3 md:px-8 rounded-xl md:rounded-2xl text-xs md:text-base transition-all hover:brightness-110 cursor-pointer shadow-lg shadow-orange-900/20"
+          >
+            <Flame className="w-4 h-4 md:w-5 md:h-5" />
+            Roast Me
+          </motion.button>
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => openAiModal('hype')}
+            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-primary text-white font-bold py-3 md:py-4 px-3 md:px-8 rounded-xl md:rounded-2xl text-xs md:text-base transition-all hover:brightness-110 cursor-pointer shadow-lg shadow-blue-900/20"
+          >
+            <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
+            Hype Me
           </motion.button>
         </div>
 

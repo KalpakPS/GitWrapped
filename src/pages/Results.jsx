@@ -5,6 +5,7 @@ import WrappedLayout from '../components/WrappedLayout';
 import Slide1Numbers from '../components/slides/Slide1Numbers';
 import Slide2Power from '../components/slides/Slide2Power';
 import Slide3DNA from '../components/slides/Slide3DNA';
+import Slide3_5Activity from '../components/slides/Slide3_5Activity';
 import Slide4Heatmap from '../components/slides/Slide4Heatmap';
 import Slide5Hits from '../components/slides/Slide5Hits';
 import Slide6Achievements from '../components/slides/Slide6Achievements';
@@ -143,6 +144,7 @@ export default function Results() {
       <Slide1Numbers data={data} key="slide1" />
       <Slide2Power data={data} key="slide2" />
       <Slide3DNA data={data} key="slide3" />
+      <Slide3_5Activity data={data} key="slide3.5" />
       <Slide4Heatmap data={data} key="slide4" />
       <Slide5Hits data={data} key="slide5" />
       <Slide6Achievements data={data} key="slide6" />

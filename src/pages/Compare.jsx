@@ -106,7 +106,7 @@ export default function Compare() {
       </button>
 
       <div className="max-w-4xl mx-auto z-10 relative">
-        <header className="text-center mb-16">
+        <header className="text-center mb-16 mt-16 md:mt-0">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
