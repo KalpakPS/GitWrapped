@@ -40,9 +40,26 @@ export default function Compare() {
         ]);
         setData1(d1);
         setData2(d2);
+
+        // Track success
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'view_battle_success', {
+            'user1': user1,
+            'user2': user2
+          });
+        }
       } catch (err) {
         console.error(err);
         setError(err.message || 'Failed to fetch comparison data');
+
+        // Track error
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'view_battle_error', {
+            'user1': user1,
+            'user2': user2,
+            'error': err.message || 'unknown'
+          });
+        }
       } finally {
         setLoading(false);
       }

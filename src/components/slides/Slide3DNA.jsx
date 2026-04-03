@@ -18,6 +18,7 @@ export default function Slide3DNA({ data }) {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
+        className="text-center"
       >
         <span className="text-white/40 uppercase tracking-widest text-[10px] md:text-sm mb-2 block font-mono">Genetic Code Analysis</span>
         <h2 className="text-3xl md:text-6xl font-bold text-white tracking-tight">Your Coding DNA</h2>

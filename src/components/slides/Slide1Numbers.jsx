@@ -35,9 +35,9 @@ export default function Slide1Numbers({ data }) {
         transition={{ duration: 0.5 }}
         className="space-y-8 md:space-y-12"
       >
-        <div className="flex flex-col gap-1 mb-4">
+        <div className="flex flex-col items-center text-center gap-1 mb-4">
           <span className="text-primary uppercase tracking-[0.3em] font-bold text-xs">Rolling Statistics</span>
-          <h2 className="text-xl md:text-3xl font-medium text-white/60">Your last 365 days in numbers</h2>
+          <h2 className="text-xl md:text-3xl font-medium text-white/60 px-4">Your last 365 days in numbers</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-16">
@@ -45,36 +45,36 @@ export default function Slide1Numbers({ data }) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="flex flex-col"
+            className="flex flex-col items-center text-center"
           >
-            <span className="text-5xl md:text-8xl font-bold text-primary">
+            <span className="text-5xl md:text-8xl font-bold text-primary leading-none">
               <Counter value={data.totalCommits} />
             </span>
-            <span className="text-sm md:text-lg text-white/40 uppercase tracking-widest mt-1 md:mt-2">Commits</span>
+            <span className="text-sm md:text-lg text-white/40 uppercase tracking-widest mt-1 md:mt-2 font-medium">Commits</span>
           </motion.div>
 
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="flex flex-col"
+            className="flex flex-col items-center text-center"
           >
-            <span className="text-5xl md:text-8xl font-bold text-primary">
+            <span className="text-5xl md:text-8xl font-bold text-primary leading-none">
               <Counter value={data.totalPRs} />
             </span>
-            <span className="text-sm md:text-lg text-white/40 uppercase tracking-widest mt-1 md:mt-2">Pull Requests</span>
+            <span className="text-sm md:text-lg text-white/40 uppercase tracking-widest mt-1 md:mt-2 font-medium">Pull Requests</span>
           </motion.div>
 
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="flex flex-col"
+            className="flex flex-col items-center text-center"
           >
-            <span className="text-5xl md:text-8xl font-bold text-primary">
+            <span className="text-5xl md:text-8xl font-bold text-primary leading-none">
               <Counter value={data.totalIssues} />
             </span>
-            <span className="text-sm md:text-lg text-white/40 uppercase tracking-widest mt-1 md:mt-2">Issues</span>
+            <span className="text-sm md:text-lg text-white/40 uppercase tracking-widest mt-1 md:mt-2 font-medium">Issues</span>
           </motion.div>
         </div>
 
@@ -82,7 +82,7 @@ export default function Slide1Numbers({ data }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
-          className="text-lg md:text-2xl text-white/80 max-w-xl mx-auto leading-relaxed px-4"
+          className="text-lg md:text-2xl text-white/80 max-w-xl mx-auto leading-relaxed px-4 text-center"
         >
           You were busier than <span className="text-primary font-bold">{percentile}%</span> of GitHub users this year. Keep that momentum!
         </motion.p>

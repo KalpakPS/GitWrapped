@@ -25,10 +25,11 @@ export default function Slide4Heatmap({ data }) {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
+        className="text-center"
       >
         <span className="text-white/40 uppercase tracking-widest text-[10px] md:text-sm mb-1 block font-mono">Temporal Heatmap</span>
         <h2 className="text-3xl md:text-6xl font-bold text-white tracking-tight leading-none">Consistency is Key</h2>
-        <p className="text-sm md:text-xl text-white/60 mt-2 md:mt-4 leading-tight px-4 text-center">You were a force of nature across <span className="text-primary font-bold">{totalCommits}</span> contributions.</p>
+        <p className="text-sm md:text-xl text-white/60 mt-2 md:mt-4 leading-tight px-4 mx-auto max-w-xl">You were a force of nature across <span className="text-primary font-bold">{totalCommits}</span> contributions.</p>
       </motion.div>
 
       <div className="w-full max-w-4xl overflow-x-auto pb-6 px-4 custom-scrollbar">

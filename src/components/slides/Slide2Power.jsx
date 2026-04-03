@@ -25,6 +25,7 @@ export default function Slide2Power({ data }) {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
+        className="text-center"
       >
         <span className="text-white/40 uppercase tracking-widest text-[10px] md:text-sm mb-2 block font-mono">Statistical Archetype Unlocked</span>
         <h2 className="text-4xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-white to-primary animate-gradient leading-tight">
