@@ -7,10 +7,10 @@ const GITHUB_GRAPHQL_API = 'https://api.github.com/graphql';
  * @param {string} username 
  * @returns {Promise<object>} wrappedData
  */
-export async function getWrappedData(username) {
+export async function getWrappedData(username, type = 'recap') {
   if (!username) throw new Error('Username is required');
 
-  const response = await fetch(`/api/stats?username=${username}`);
+  const response = await fetch(`/api/stats?username=${username}&type=${type}`);
   
   if (!response.ok) {
     const errorData = await response.json();

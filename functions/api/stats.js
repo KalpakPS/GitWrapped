@@ -9,6 +9,7 @@ export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
   const username = url.searchParams.get('username');
+  const type = url.searchParams.get('type') || 'recap'; // Default to recap
   const token = env.GITHUB_TOKEN;
 
   if (!username) {
@@ -29,13 +30,16 @@ export async function onRequest(context) {
     const stats = await fetchGitHubData(username, token);
     const gamified = gamify(stats);
 
-    // Increment cumulative counter in the background
-    if (env.STATS_KV) {
+    // Increment cumulative counter in the background (Only if NOT a battle)
+    // OPTIMIZATION: To stay under Cloudflare KV's 1,000 writes/day free limit,
+    // we only update the DB for ~10% of users, incrementing by 10 each time.
+    const BATCH_SIZE = 10;
+    if (env.STATS_KV && type !== 'battle' && Math.random() < (1 / BATCH_SIZE)) {
       context.waitUntil((async () => {
         try {
           const countStr = await env.STATS_KV.get('total_recaps');
           const currentCount = parseInt(countStr || '0', 10);
-          await env.STATS_KV.put('total_recaps', (currentCount + 1).toString());
+          await env.STATS_KV.put('total_recaps', (currentCount + BATCH_SIZE).toString());
         } catch (err) {
           console.error('KV Counter Error:', err);
         }
