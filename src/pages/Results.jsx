@@ -36,9 +36,24 @@ export default function Results() {
       try {
         const result = await getWrappedData(username);
         setData(result);
+        
+        // Track success
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'view_recap_success', {
+            'username': username
+          });
+        }
       } catch (err) {
         console.error(err);
         setError(err.message || 'Failed to fetch data');
+        
+        // Track error
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'view_recap_error', {
+            'username': username,
+            'error': err.message || 'unknown'
+          });
+        }
       }
     };
 

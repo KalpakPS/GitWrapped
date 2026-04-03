@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, X, Zap } from 'lucide-react';
@@ -9,11 +9,31 @@ export default function Home() {
   const [isBattleModalOpen, setIsBattleModalOpen] = useState(false);
   const [battleUser1, setBattleUser1] = useState('');
   const [battleUser2, setBattleUser2] = useState('');
+  const [totalRecaps, setTotalRecaps] = useState(0);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchTotalCount = async () => {
+      try {
+        const response = await fetch('/api/total-count');
+        const data = await response.json();
+        if (data.total) setTotalRecaps(data.total);
+      } catch (err) {
+        console.error('Error fetching total count:', err);
+      }
+    };
+    fetchTotalCount();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (username.trim()) {
+      // Track event
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'generate_recap', {
+          'username': username.trim()
+        });
+      }
       navigate(`/results/${username.trim()}`);
     }
   };
@@ -21,6 +41,13 @@ export default function Home() {
   const handleBattle = (e) => {
     e.preventDefault();
     if (battleUser1.trim() && battleUser2.trim()) {
+      // Track event
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'start_battle', {
+          'user1': battleUser1.trim(),
+          'user2': battleUser2.trim()
+        });
+      }
       navigate(`/compare/${battleUser1.trim()}/${battleUser2.trim()}`);
     }
   };
@@ -55,7 +82,7 @@ export default function Home() {
            Analyze your last 365 days of activity, celebrate your growth, and unwrap your true developer potential.
         </p>
 
-        <form onSubmit={handleSubmit} className="relative max-w-md mx-auto group">
+        <form onSubmit={handleSubmit} className="relative max-w-md mx-auto group mb-8">
           <div className="absolute -inset-1 bg-gradient-to-r from-primary to-purple-600 rounded-2xl blur opacity-25 group-focus-within:opacity-75 transition duration-1000 group-hover:duration-200"></div>
           <div className="relative flex items-center bg-black rounded-xl border border-white/10 p-1 md:p-2">
             <input
@@ -73,6 +100,17 @@ export default function Home() {
             </button>
           </div>
         </form>
+
+        {totalRecaps >= 0 && (
+          <motion.p 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="text-white/40 text-[10px] md:text-sm font-medium mt-6"
+          >
+            Join <span className="text-white font-bold">{totalRecaps.toLocaleString()}+</span> developers who've unboxed their year.
+          </motion.p>
+        )}
       </motion.div>
 
       {/* Code Battle Entry */}

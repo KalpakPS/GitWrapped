@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import DeveloperCard from '../DeveloperCard';
 import { Download, Share2 } from 'lucide-react';
-import { Twitter } from '../Icons';
 import { toPng } from 'html-to-image';
 
 export default function Slide7Identity({ data }) {
@@ -10,6 +9,14 @@ export default function Slide7Identity({ data }) {
 
   const downloadCard = async () => {
     if (cardRef.current === null) return;
+    
+    // Track download event
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'download_card', {
+        'username': data.username
+      });
+    }
+
     try {
       const dataUrl = await toPng(cardRef.current, { 
         cacheBust: true,
@@ -24,14 +31,46 @@ export default function Slide7Identity({ data }) {
     }
   };
 
-  const shareTwitter = () => {
-    const text = `My GitHub Power Level is ${data.gamified.powerLevel.toLocaleString()} (${data.gamified.tier}). I'm a ${data.gamified.class} wielding ${data.gamified.element}. What's yours? 🔥 https://gitwrapped.kalpakps.site/results/${data.username} #GitWrapped`;
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+  const handleShare = async () => {
+    // Track share event using standard GA4 "share" event
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'share', {
+        'method': 'universal',
+        'content_type': 'recap',
+        'item_id': data.username
+      });
+    }
+
+    const shareData = {
+      title: 'GitWrapped',
+      text: `✨ GitWrapped! I'm a ${data.gamified.class} wielding ${data.gamified.element.split(' ')[1]} with a Power Level of ${data.gamified.powerLevel.toLocaleString()}! Can you beat my ${data.gamified.tier} stats? 🚀💻`,
+      url: `${window.location.origin}/results/${data.username}`,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      // Fallback: Copy to clipboard
+      handleCopy();
+    }
   };
 
   const [copied, setCopied] = React.useState(false);
 
   const handleCopy = () => {
+    // Track copy event using standard GA4 "share" event
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'share', {
+        'method': 'copy_link',
+        'content_type': 'recap',
+        'item_id': data.username
+      });
+    }
+    
     navigator.clipboard.writeText(`${window.location.origin}/results/${data.username}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -77,10 +116,10 @@ export default function Slide7Identity({ data }) {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={shareTwitter}
-            className="flex-1 flex items-center justify-center gap-2 bg-[#1DA1F2] text-white font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl md:rounded-2xl text-sm md:text-base shrink-0 cursor-pointer"
+            onClick={handleShare}
+            className="flex-1 flex items-center justify-center gap-2 bg-white/10 text-white border border-white/20 font-bold py-3 md:py-4 px-6 md:px-8 rounded-xl md:rounded-2xl text-sm md:text-base shrink-0 cursor-pointer hover:bg-white/20 transition-colors"
           >
-            <Twitter className="w-4 h-4 md:w-5 md:h-5 fill-current" />
+            <Share2 className="w-4 h-4 md:w-5 md:h-5" />
             Share
           </motion.button>
         </div>

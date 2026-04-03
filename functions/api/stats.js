@@ -28,6 +28,19 @@ export async function onRequest(context) {
   try {
     const stats = await fetchGitHubData(username, token);
     const gamified = gamify(stats);
+
+    // Increment cumulative counter in the background
+    if (env.STATS_KV) {
+      context.waitUntil((async () => {
+        try {
+          const countStr = await env.STATS_KV.get('total_recaps');
+          const currentCount = parseInt(countStr || '0', 10);
+          await env.STATS_KV.put('total_recaps', (currentCount + 1).toString());
+        } catch (err) {
+          console.error('KV Counter Error:', err);
+        }
+      })());
+    }
     
     return new Response(JSON.stringify({ ...stats, gamified }), {
       headers: { 'Content-Type': 'application/json' }
