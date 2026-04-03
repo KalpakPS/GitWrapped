@@ -59,6 +59,20 @@ Your **Power Level** isn't just a number—it's a weighted score based on your r
 | **⚔️ Code Battle** | Compare stats with fellow developers in a real-time showdown. |
 | **📊 Interactive Analytics** | High-fidelity charts and heatmaps that turn raw activity into visual stories. |
 | **📸 One-Click Export** | Export your identity card as a high-quality image for social sharing. |
+| **🔐 Private Stats** | Optional GitHub OAuth to include your private repository data in your recap. |
+
+---
+
+## 🛠️ Deployment & Setup (Cloudflare)
+
+To enable Private Data authorization, you must configure a GitHub OAuth App and set the following environment variables:
+
+1. **GitHub OAuth App**: Create one in [Developer Settings](https://github.com/settings/developers).
+   - **Authorization callback URL**: `https://your-domain.pages.dev/api/auth/callback`
+2. **Environment Variables**:
+   - `GITHUB_CLIENT_ID`: Your OAuth Client ID.
+   - `GITHUB_CLIENT_SECRET`: Your OAuth Client Secret.
+   - `GITHUB_TOKEN`: Your personal fallback token for public stats.
 
 ---
 

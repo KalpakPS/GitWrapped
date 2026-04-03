@@ -1,18 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, X, Zap } from 'lucide-react';
+import { Sparkles, X, Zap, Star, LogOut, ChevronRight } from 'lucide-react';
 import { Github } from '../components/Icons';
 
 export default function Home() {
   const [username, setUsername] = useState('');
+  const [user, setUser] = useState(null); // { loggedIn: boolean, user: string }
   const [isBattleModalOpen, setIsBattleModalOpen] = useState(false);
+  const [showAuthSuccess, setShowAuthSuccess] = useState(false);
   const [battleUser1, setBattleUser1] = useState('');
   const [battleUser2, setBattleUser2] = useState('');
   const [totalRecaps, setTotalRecaps] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const response = await fetch('/api/auth/session');
+        const data = await response.json();
+        if (data.loggedIn) setUser(data);
+      } catch (err) {
+        console.error('Error fetching session:', err);
+      }
+    };
+    
     const fetchTotalCount = async () => {
       try {
         const response = await fetch('/api/total-count');
@@ -22,8 +34,34 @@ export default function Home() {
         console.error('Error fetching total count:', err);
       }
     };
+
+    fetchSession();
     fetchTotalCount();
+
+    // Check for auth success in URL
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('auth_success')) {
+      setShowAuthSuccess(true);
+      setTimeout(() => setShowAuthSuccess(false), 5000);
+      
+      // Remove the param without refreshing
+      url.searchParams.delete('auth_success');
+      window.history.replaceState({}, '', url.pathname);
+    }
   }, []);
+
+  const handleLogin = () => {
+    window.location.href = '/api/auth/login';
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout');
+      setUser(null);
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -56,6 +94,29 @@ export default function Home() {
     <main className="relative min-h-screen flex flex-col items-center px-4 pt-16 md:pt-12 pb-12 overflow-x-hidden text-white">
       <div className="wrapped-bg" />
       
+      {/* Success Notification */}
+      <AnimatePresence>
+        {showAuthSuccess && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="fixed top-8 left-1/2 -translate-x-1/2 z-[200] max-w-sm w-full px-4"
+          >
+            <div className="glass px-6 py-4 rounded-2xl border border-primary/30 flex items-center gap-4 bg-primary/10 backdrop-blur-xl shadow-2xl shadow-primary/20">
+              <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+                <Github className="w-5 h-5 text-primary" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-bold text-white leading-tight">Sync Successful!</p>
+                <p className="text-[11px] text-white/50">Your private activity is now visible.</p>
+              </div>
+              <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
       {/* Hero Section */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -67,10 +128,19 @@ export default function Home() {
           initial={{ scale: 0.8 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", stiffness: 100 }}
-          className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-white/10 border border-white/20 mb-6 md:mb-8 backdrop-blur-md"
+          className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-white/10 border border-white/20 mb-6 md:mb-8 backdrop-blur-md group/badge"
         >
           <Github className="w-3.5 h-3.5 md:w-4 h-4" />
           <span className="text-xs md:text-sm font-medium">GitWrapped</span>
+          <a 
+            href="https://github.com/KalpakPS/GitWrapped" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 ml-1 pl-2 border-l border-white/20 hover:text-yellow-400 transition-all duration-300 group-hover/badge:border-white/40"
+            title="Star on GitHub"
+          >
+            <Star className="w-3 h-3 md:w-3.5 md:h-3.5 hover:fill-yellow-400" />
+          </a>
         </motion.div>
 
         <h1 className="text-3xl sm:text-6xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/50 mb-4 tracking-tight leading-tight md:leading-none">
@@ -81,6 +151,7 @@ export default function Home() {
         <p className="text-base md:text-xl text-white/60 mb-8 md:mb-12 max-w-2xl mx-auto px-2 text-center">
            Analyze your last 365 days of activity, celebrate your growth, and unwrap your true developer potential.
         </p>
+
 
         <form onSubmit={handleSubmit} className="relative max-w-md mx-auto group mb-8">
           <div className="absolute -inset-1 bg-gradient-to-r from-primary to-purple-600 rounded-2xl blur opacity-25 group-focus-within:opacity-75 transition duration-1000 group-hover:duration-200"></div>
@@ -113,23 +184,55 @@ export default function Home() {
         )}
       </motion.div>
 
-      {/* Code Battle Entry */}
+      {/* Quick Actions (Battle & Auth) */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="mt-12 flex items-center justify-center gap-4 z-10"
+        className="mt-12 flex flex-wrap items-center justify-center gap-4 z-10"
       >
+        {!user ? (
+          <button
+            onClick={handleLogin}
+            className="group flex items-center gap-2 md:gap-3 px-4 py-2.5 md:px-6 md:py-3 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 transition-all hover:bg-white/10 cursor-pointer"
+          >
+            <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-white/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Github className="w-3.5 h-3.5 md:w-4 md:h-4 text-white" />
+            </div>
+            <div className="text-left">
+              <p className="text-[8px] md:text-[9px] uppercase tracking-widest text-white/40 font-bold">Privacy</p>
+              <p className="text-xs md:text-sm font-bold text-white">Authorize Private</p>
+            </div>
+          </button>
+        ) : (
+          <div className="group flex items-center gap-2 md:gap-3 px-4 py-2.5 md:px-5 md:py-3 rounded-xl bg-white/10 border border-white/20 backdrop-blur-md">
+            <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-primary/20 flex items-center justify-center">
+              <Github className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" />
+            </div>
+            <div className="text-left mr-1 md:mr-2">
+              <p className="text-[8px] md:text-[9px] uppercase tracking-widest text-primary font-bold">Authorized</p>
+              <p className="text-xs md:text-sm font-bold text-white">@{user.user}</p>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="p-1 md:p-1.5 rounded-lg hover:bg-white/10 transition-colors text-white/40 hover:text-white cursor-pointer"
+              title="Logout"
+            >
+              <LogOut className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            </button>
+          </div>
+        )}
+
         <button
           onClick={() => setIsBattleModalOpen(true)}
-          className="group flex items-center gap-3 px-6 py-3 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 transition-all hover:bg-white/10 cursor-pointer"
+          className="group flex items-center gap-2 md:gap-3 px-4 py-2.5 md:px-6 md:py-3 rounded-xl bg-white/5 border border-white/10 hover:border-primary/50 transition-all hover:bg-white/10 cursor-pointer"
         >
-          <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Sparkles className="w-4 h-4 text-primary" />
+          <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" />
           </div>
           <div className="text-left">
-            <p className="text-[9px] uppercase tracking-widest text-white/40 font-bold">New Feature</p>
-            <p className="text-sm font-bold text-white">Battle a Friend</p>
+            <p className="text-[8px] md:text-[9px] uppercase tracking-widest text-white/40 font-bold">New Feature</p>
+            <p className="text-xs md:text-sm font-bold text-white">Battle a Friend</p>
           </div>
         </button>
       </motion.div>

@@ -10,7 +10,22 @@ export async function onRequest(context) {
   const url = new URL(request.url);
   const username = url.searchParams.get('username');
   const type = url.searchParams.get('type') || 'recap'; // Default to recap
-  const token = env.GITHUB_TOKEN;
+  
+  // Extract token from cookie or fallback to environment variable
+  let token = env.GITHUB_TOKEN;
+  const cookieHeader = request.headers.get('Cookie');
+  if (cookieHeader) {
+    const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
+      const [name, value] = cookie.trim().split('=');
+      acc[name] = value;
+      return acc;
+    }, {});
+    const session = cookies['gw_session'];
+    if (session && session.includes(':')) {
+      const [userToken] = session.split(':');
+      token = userToken;
+    }
+  }
 
   if (!username) {
     return new Response(JSON.stringify({ error: 'Username is required' }), {
@@ -20,7 +35,7 @@ export async function onRequest(context) {
   }
 
   if (!token) {
-    return new Response(JSON.stringify({ error: 'GITHUB_TOKEN is not configured on Cloudflare' }), {
+    return new Response(JSON.stringify({ error: 'GitHub API token is not configured' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
