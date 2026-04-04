@@ -1,5 +1,15 @@
 export const patchNotes = [
   {
+    version: "1.2.2",
+    date: "April 4, 2026",
+    title: "The Contender's Report Update",
+    highlights: [
+      "🎙️ Live AI Battle Commentary",
+      "📸 Shareable Battle Match Reports",
+    ],
+    notes: "Your Code Battle victories are now shareable."
+  },
+  {
     version: "1.2.1",
     date: "April 4, 2026",
     title: "The Intelligence & Precision Update",

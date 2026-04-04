@@ -1,28 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
-const Counter = ({ value, duration = 2 }) => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    let start = 0;
-    const end = value;
-    if (start === end) return;
-
-    let totalMiliseconds = duration * 1000;
-    let incrementTime = (totalMiliseconds / end);
-
-    let timer = setInterval(() => {
-      start += 1;
-      setCount(start);
-      if (start === end) clearInterval(timer);
-    }, incrementTime);
-
-    return () => clearInterval(timer);
-  }, [value, duration]);
-
-  return <span>{count.toLocaleString()}</span>;
-};
+import AnimatedNumber from '../AnimatedNumber';
 
 export default function Slide1Numbers({ data }) {
   const percentile = Math.min(99, Math.floor((data.gamified.powerLevel / 10000) * 100));
@@ -48,7 +27,7 @@ export default function Slide1Numbers({ data }) {
             className="flex flex-col items-center text-center"
           >
             <span className="text-5xl md:text-8xl font-bold text-primary leading-none">
-              <Counter value={data.totalCommits} />
+              <AnimatedNumber value={data.totalCommits} duration={1.2} />
             </span>
             <span className="text-sm md:text-lg text-white/40 uppercase tracking-widest mt-1 md:mt-2 font-medium">Commits</span>
           </motion.div>
@@ -60,7 +39,7 @@ export default function Slide1Numbers({ data }) {
             className="flex flex-col items-center text-center"
           >
             <span className="text-5xl md:text-8xl font-bold text-primary leading-none">
-              <Counter value={data.totalPRs} />
+              <AnimatedNumber value={data.totalPRs} duration={1.2} />
             </span>
             <span className="text-sm md:text-lg text-white/40 uppercase tracking-widest mt-1 md:mt-2 font-medium">Pull Requests</span>
           </motion.div>
@@ -72,7 +51,7 @@ export default function Slide1Numbers({ data }) {
             className="flex flex-col items-center text-center"
           >
             <span className="text-5xl md:text-8xl font-bold text-primary leading-none">
-              <Counter value={data.totalIssues} />
+              <AnimatedNumber value={data.totalIssues} duration={1.2} />
             </span>
             <span className="text-sm md:text-lg text-white/40 uppercase tracking-widest mt-1 md:mt-2 font-medium">Issues</span>
           </motion.div>

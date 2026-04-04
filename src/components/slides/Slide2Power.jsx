@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Zap, Shield, Sparkles, Ghost, Swords, Bird, Moon, Coffee, Boxes, Sun } from 'lucide-react';
+import AnimatedNumber from '../AnimatedNumber';
 
 const ClassIcon = ({ type }) => {
   switch (type) {
@@ -53,20 +54,20 @@ export default function Slide2Power({ data }) {
             strokeDasharray="100 100"
             initial={{ strokeDashoffset: 100 }}
             animate={{ strokeDashoffset: Math.max(0, 100 - (powerLevel / 10000) * 100) }}
-            transition={{ duration: 2, delay: 0.5 }}
+            transition={{ duration: 1.2, delay: 0.5 }}
             style={{ strokeLinecap: 'round' }}
           />
         </svg>
 
         <div className="z-10 flex flex-col items-center">
-          <motion.span 
+          <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1 }}
             className="text-3xl md:text-6xl font-mono font-bold text-white mb-1"
           >
-            {powerLevel.toLocaleString()}
-          </motion.span>
+            <AnimatedNumber value={powerLevel} duration={1.2} />
+          </motion.div>
           <span className="text-white/40 uppercase tracking-wider text-[10px] md:text-xs">Power Level</span>
         </div>
       </div>

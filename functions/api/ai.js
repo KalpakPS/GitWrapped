@@ -6,21 +6,24 @@ const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 export async function onRequest(context) {
   const { request, env } = context;
-  
+
   if (request.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), { 
-      status: 405, 
-      headers: { 'Content-Type': 'application/json' } 
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' }
     });
   }
 
-  const { username, stats, mode } = await request.json();
+  const { username, stats, mode, user1, user2 } = await request.json();
+  const winner = (user1?.power || 0) > (user2?.power || 0) ? user1 : user2;
+  const loser = (user1?.power || 0) > (user2?.power || 0) ? user2 : user1;
+  const margin = Math.abs((user1?.power || 0) - (user2?.power || 0));
   const apiKey = env.GROQ_API_KEY;
 
   if (!apiKey) {
-    return new Response(JSON.stringify({ error: 'Groq API key not configured' }), { 
-      status: 500, 
-      headers: { 'Content-Type': 'application/json' } 
+    return new Response(JSON.stringify({ error: 'Groq API key not configured' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
     });
   }
 
@@ -84,7 +87,37 @@ Archetype: ${stats.archetype}
 Now hype them up in one legendary sentence.
 `;
 
-  const prompt = mode === 'roast' ? roastPrompt : hypePrompt;
+
+  const battlePrompt = `
+You are an unhinged, legendary e-sports commentator for the GitHub Open Source Olympics — 
+think ESPN meets Stack Overflow. You've seen thousands of code battles and you have OPINIONS.
+
+PLAYER 1: @${user1?.username}
+- Tier: ${user1?.tier} | Archetype: ${user1?.archetype}
+- Commits: ${user1?.commits} | PRs: ${user1?.pullRequests} | Streak: ${user1?.streak} days
+- Power Level: ${user1?.power}
+
+PLAYER 2: @${user2?.username}
+- Tier: ${user2?.tier} | Archetype: ${user2?.archetype}
+- Commits: ${user2?.commits} | PRs: ${user2?.pullRequests} | Streak: ${user2?.streak} days
+- Power Level: ${user2?.power}
+
+WINNER: @${winner?.username}
+LOSER: @${loser?.username}
+MARGIN: ${margin} power points
+
+YOUR RULES:
+- TWO sentences. Hard limit. No more, no less.
+- Each sentence must be at least 10 words long. Like this example sentence which is exactly twelve words long.
+- No setup, no fluff, just straight to the savage verdict.
+- Be specific to their stats and archetypes.
+- No emojis. No hashtags.
+- If margin is under 50, acknowledge it was close. If over 200, call it a massacre.
+
+Commentate.
+`;
+
+  const prompt = mode === 'roast' ? roastPrompt : mode === 'hype' ? hypePrompt : battlePrompt;
 
   // Helper dedicated to fetching from Groq
   const callGroq = async (model) => {
@@ -108,10 +141,10 @@ Now hype them up in one legendary sentence.
   try {
     // Flagship Model Rotation (Top to bottom quality/availability)
     const models = [
-      'llama-3.3-70b-versatile', 
-      'llama-3.1-70b-versatile', 
-      'llama-3.1-8b-instant',    
-      'gemma2-9b-it'             
+      'llama-3.3-70b-versatile',
+      'llama-3.1-70b-versatile',
+      'llama-3.1-8b-instant',
+      'gemma2-9b-it'
     ];
 
     let response;
@@ -120,13 +153,13 @@ Now hype them up in one legendary sentence.
 
     for (const model of models) {
       response = await callGroq(model);
-      
+
       // If successful, break rotation
       if (response.ok) {
         success = true;
         break;
       }
-      
+
       // If we hit a rate limit (429), log and try the next one
       if (response.status === 429) {
         console.warn(`[AI] Model ${model} rate-limited. Trying next in rotation...`);
@@ -145,7 +178,7 @@ Now hype them up in one legendary sentence.
     }
 
     const result = await response.json();
-    
+
     if (result.error) {
       throw new Error(result.error.message || 'AI generation failed');
     }

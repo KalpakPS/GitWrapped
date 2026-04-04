@@ -25,14 +25,16 @@ export async function getWrappedData(username, type = 'recap') {
  * Generate AI Roast or Hype
  * @param {string} username
  * @param {object} stats
- * @param {'roast' | 'hype'} mode
+ * @param {'roast' | 'hype' | 'battle'} mode
+ * @param {object} user1
+ * @param {object} user2
  * @returns {Promise<string>} aiMessage
  */
-export async function getAIGeneration(username, stats, mode) {
+export async function getAIGeneration(username, stats, mode, user1 = null, user2 = null) {
   const response = await fetch('/api/ai', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, stats, mode })
+    body: JSON.stringify({ username, stats, mode, user1, user2 })
   });
 
   if (!response.ok) {
