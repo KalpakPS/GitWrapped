@@ -13,7 +13,7 @@
 
 **GitWrapped** transforms your year of code into a 7-chapter cinematic journey. Built for developers who value aesthetics as much as results.
 
-[The Chapters](#-the-cinematic-chapters) • [Power Logic](#-how-power-is-calculated) • [Features](#-project-features)
+[The Chapters](#-the-cinematic-chapters) • [Features](#-project-features) • [Power Logic](#-how-power-is-calculated) • [Developer Classes](#-developer-classes) • [Achievements](#-achievements) • [The Tiers](#-the-tiers)
 
 </div>
 
