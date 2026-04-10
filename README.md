@@ -116,6 +116,39 @@ Your total score determines your standing in the developer hierarchy.
 | **Apprentice** | 100+ |
 | **Novice** | < 100 |
 
+
+---
+
+## 🛠️ Run Locally
+
+Follow these steps to set up GitWrapped on your local machine:
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/KalpakPS/GitWrapped.git
+cd GitWrapped
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Environment Setup
+
+Create a `.dev.vars` file in the root directory for Cloudflare Workers variables:
+```env
+GITHUB_TOKEN=your_github_personal_access_token
+GROQ_API_KEY=your_groq_api_key
+```
+
+### 4. Start Development Server
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`.
+
 ---
 
 <div align="center">
